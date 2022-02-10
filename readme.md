@@ -1,1 +1,1 @@
-Repository of several projects
+Repository of several microservices
