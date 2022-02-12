@@ -25,3 +25,6 @@ eureka:
 
 hibernate:
   dialect: org.hibernate.dialect.H2Dialect
+
+gateway:
+  ip: 127.0.0.1
