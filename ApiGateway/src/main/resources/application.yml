@@ -1,0 +1,30 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: apigateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      default-filters:
+        - RemoveRequestHeader=Cookie
+      routes:
+        - id: accountStatus
+          uri: lb://apiaccountmanagement
+          predicates:
+            - Path=/**
+            - Method=GET
+        - id: usersStatus
+          uri: lb://apiusers
+          predicates:
+            - Path=/**
+            - Method=GET
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8080/eureka
