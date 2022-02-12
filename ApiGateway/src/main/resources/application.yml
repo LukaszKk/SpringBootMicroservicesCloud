@@ -17,12 +17,12 @@ spring:
           uri: lb://apiaccountmanagement
           predicates:
             - Path=/**
-            - Method=GET
+            - Method=GET, POST, PUT, DELETE
         - id: usersStatus
           uri: lb://apiusers
           predicates:
             - Path=/**
-            - Method=GET
+            - Method=GET, POST, PUT, DELETE
 
 eureka:
   client:

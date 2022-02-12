@@ -13,7 +13,7 @@ spring:
       settings:
         web-allow-others: true
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:h2:mem:testdb;MODE=LEGACY
 
 eureka:
   client:
@@ -21,3 +21,7 @@ eureka:
       defaultZone: http://localhost:8080/eureka
   instance:
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+
+hibernate:
+  dialect: org.hibernate.dialect.H2Dialect
