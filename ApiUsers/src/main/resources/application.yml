@@ -28,3 +28,7 @@ hibernate:
 
 gateway:
   ip: 127.0.0.1
+
+token:
+  expiration-time: 86400000 # 24 hours
+  secret: lkajsbd8712631h23b

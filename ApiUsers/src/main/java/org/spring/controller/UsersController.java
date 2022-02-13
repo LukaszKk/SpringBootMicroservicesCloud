@@ -24,7 +24,8 @@ public class UsersController {
     private UsersService usersService;
 
     @Autowired
-    public UsersController(Environment environment, UsersService usersService) {
+    public UsersController(Environment environment,
+                           UsersService usersService) {
         this.environment = environment;
         this.usersService = usersService;
     }
