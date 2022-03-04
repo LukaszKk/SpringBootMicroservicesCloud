@@ -32,3 +32,7 @@ gateway:
 token:
   expiration-time: 86400000 # 24 hours
   secret: lkajsbd8712631h23b
+
+login:
+  url:
+    path: /login # the same as default

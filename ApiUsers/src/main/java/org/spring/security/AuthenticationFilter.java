@@ -1,11 +1,10 @@
 package org.spring.security;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import org.spring.service.UsersService;
 import org.spring.ui.request.LoginRequest;
-import org.spring.ui.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,13 +15,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
@@ -43,10 +40,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response)
-            throws AuthenticationException {
+                                                HttpServletResponse response) throws AuthenticationException {
         try {
-            LoginRequest credentials = new ObjectMapper().readValue(request.getInputStream(), LoginRequest.class);
+            var credentials = new ObjectMapper()
+                    .readValue(request.getInputStream(), LoginRequest.class);
+
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
                             credentials.getEmail(),
@@ -63,17 +61,17 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult) throws IOException, ServletException {
-        String userName = ((User) authResult.getPrincipal()).getUsername();
-        UserResponse userDetails = usersService.getUserDetailsByEmail(userName);
+                                            Authentication authResult) {
+        var userName = ((User) authResult.getPrincipal()).getUsername();
+        var userDetails = usersService.getUserDetailsByEmail(userName);
 
-        String token = Jwts.builder()
-                .setSubject(userDetails.getEmail())
-                .setExpiration(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()
+        var token = JWT.create()
+                .withSubject(userDetails.getEmail())
+                .withExpiresAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()
                         .plusMillis(Long.parseLong(
                                 Objects.requireNonNull(environment.getProperty("token.expiration-time"))))))
-                .signWith(SignatureAlgorithm.HS512, environment.getProperty("token.secret"))
-                .compact();
+                .sign(Algorithm.HMAC512(
+                        Objects.requireNonNull(environment.getProperty("token.secret"))));
 
         response.addHeader("token", token);
         response.addHeader("email", userDetails.getEmail());
