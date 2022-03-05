@@ -1,8 +1,8 @@
 package org.spring.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.spring.service.UsersService;
 import org.spring.ui.request.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,14 +43,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
             var credentials = new ObjectMapper()
-                    .readValue(request.getInputStream(), LoginRequest.class);
+                .readValue(request.getInputStream(), LoginRequest.class);
 
             return getAuthenticationManager().authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            credentials.getEmail(),
-                            credentials.getPassword(),
-                            new ArrayList<>()
-                    )
+                new UsernamePasswordAuthenticationToken(
+                    credentials.getEmail(),
+                    credentials.getPassword(),
+                    new ArrayList<>()
+                )
             );
         } catch (IOException e) {
             throw new RuntimeException();
@@ -65,13 +65,16 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         var userName = ((User) authResult.getPrincipal()).getUsername();
         var userDetails = usersService.getUserDetailsByEmail(userName);
 
-        var token = JWT.create()
-                .withSubject(userDetails.getEmail())
-                .withExpiresAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()
-                        .plusMillis(Long.parseLong(
-                                Objects.requireNonNull(environment.getProperty("token.expiration-time"))))))
-                .sign(Algorithm.HMAC512(
-                        Objects.requireNonNull(environment.getProperty("token.secret"))));
+        var token = Jwts.builder()
+            .setSubject(userDetails.getEmail())
+            .setExpiration(Date.from(LocalDateTime.now().atZone(
+                ZoneId.systemDefault()).toInstant().plusMillis(
+                Long.parseLong(Objects.requireNonNull(environment.getProperty("token.expiration-time"))))))
+            .signWith(SignatureAlgorithm.HS256, Objects.requireNonNull(environment.getProperty("token.secret")))
+            .compact();
+//                .withExpiresAt(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()
+//                        .plusMillis(Long.parseLong(
+//                                Objects.requireNonNull(environment.getProperty("token.expiration-time"))))))
 
         response.addHeader("token", token);
         response.addHeader("email", userDetails.getEmail());

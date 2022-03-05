@@ -10,41 +10,6 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
-      default-filters:
-      - RemoveRequestHeader=Cookie
-      routes:
-      - id: users-ws
-        uri: lb://apiusers
-        predicates:
-        - Path=/apiusers/users
-        - Method=POST
-#        filters:
-#        - RewritePath=/apiusers(?<segment>/?.*), $\{segment}
-
-      - id: users-ws-login
-        uri: lb://apiusers
-        predicates:
-        - Path=/apiusers/users/login
-        - Method=POST
-#        filters:
-#        - RewritePath=/apiusers(?<segment>/?.*), $\{segment}
-
-#      - id: users-ws-get-update-delete
-#        uri: lb://apiusers
-#        predicates:
-#        - Path=/apiusers/users/**
-#        - Method=GET,PUT,DELETE
-#        - Header=Authorization, Bearer (.*)
-#        filters:
-#        - AuthorizationHeaderGatewayFilter
-#        - RewritePath=/apiusers(?<segment>/?.*), $\{segment}
-
-      - id: account
-        uri: lb://apiaccountmanagement
-        predicates:
-        - Path=/**
-        - Method=GET,POST,PUT,DELETE
-        - Header=Authorization, Bearer (.*)
 
 eureka:
   client:

@@ -1,7 +1,6 @@
 package org.api.gateway.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import io.jsonwebtoken.Jwts;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
@@ -16,7 +15,7 @@ import java.util.Objects;
 
 @Component
 public class AuthorizationHeaderGatewayFilter
-        implements GatewayFilterFactory<AuthorizationHeaderGatewayFilter.Config> {
+    implements GatewayFilterFactory<AuthorizationHeaderGatewayFilter.Config> {
 
     @Autowired
     Environment env;
@@ -61,17 +60,20 @@ public class AuthorizationHeaderGatewayFilter
         };
     }
 
-    private Mono<Void> onError(ServerWebExchange exchange, String message, HttpStatus httpStatus) {
+    private Mono<Void> onError(ServerWebExchange exchange,
+                               String message,
+                               HttpStatus httpStatus) {
         var response = exchange.getResponse();
         response.setStatusCode(httpStatus);
         return response.setComplete();
     }
 
     private boolean isTokenValid(String jwt) {
-        var algorithm = Algorithm.HMAC512(
-                Objects.requireNonNull(env.getProperty("token.secret")));
-        var decodedJWT = JWT.require(algorithm).build().verify(jwt);
-        var subject = decodedJWT.getSubject();
+        var subject = Jwts.parser()
+            .setSigningKey(Objects.requireNonNull(env.getProperty("token.secret")))
+            .parseClaimsJws(jwt)
+            .getBody()
+            .getSubject();
         return subject != null && !subject.isEmpty();
     }
 }
