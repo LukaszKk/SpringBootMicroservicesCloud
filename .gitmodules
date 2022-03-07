@@ -1,0 +1,3 @@
+[submodule "SpringBootMicroservicesCloudConfig"]
+	path = SpringBootMicroservicesCloudConfig
+	url = https://github.com/LukaszKk/SpringBootMicroservicesCloudConfig
