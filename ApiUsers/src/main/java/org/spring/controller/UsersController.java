@@ -32,12 +32,13 @@ public class UsersController {
 
     @GetMapping("/status")
     public String status() {
-        return "Running on port " + environment.getProperty("local.server.port");
+        return "Running on port " + environment.getProperty("local.server.port") + ", with token = " +
+            environment.getProperty("token.secret");
     }
 
     @PostMapping(
-            consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
-            produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
+        consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE},
+        produces = {MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
         UserResponse userResponse = usersService.createUser(userRequest);
