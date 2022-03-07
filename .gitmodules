@@ -1,3 +1,3 @@
-[submodule "https://github.com/LukaszKk/SpringBootMicroservicesCloudConfig"]
-	path = https://github.com/LukaszKk/SpringBootMicroservicesCloudConfig
+[submodule "D:\\Projects\\SpringBootMicroservicesCloud\\ServicesConfiguration"]
+	path = D:\\Projects\\SpringBootMicroservicesCloud\\ServicesConfiguration
 	url = https://github.com/LukaszKk/SpringBootMicroservicesCloud.git
