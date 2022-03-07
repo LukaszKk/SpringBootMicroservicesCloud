@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/LukaszKk/SpringBootMicroservicesCloud/tree/main/ConfigServer
-          username:
-          password:
-          clone-on-start: false
+#          uri: https://github.com/LukaszKk/SpringBootMicroservicesCloud/tree/main/ServicesConfiguration
+#          username:
+#          password:
+#          clone-on-start: false

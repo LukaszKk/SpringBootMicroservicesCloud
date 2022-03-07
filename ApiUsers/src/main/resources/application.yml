@@ -2,6 +2,8 @@ server:
   port: ${PORT:0}
 
 spring:
+  config:
+    import: optional:configserver:http://localhost:8082
   application:
     name: apiusers
   devtools:
