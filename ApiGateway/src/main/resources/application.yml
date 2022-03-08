@@ -29,3 +29,12 @@ eureka:
 
 token:
   secret: lkajsbd8712631h23b
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - beans
+          - info
