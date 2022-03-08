@@ -12,6 +12,10 @@ spring:
         locator:
           enabled: true
           lower-case-service-id: true
+    bus:
+      enabled: true
+      refresh:
+        enabled: true
   rabbitmq:
     host: localhost
     port: 5672

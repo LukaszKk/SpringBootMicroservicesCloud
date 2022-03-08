@@ -4,15 +4,22 @@ server:
 spring:
   application:
     name: ConfigServer
+  profiles:
+    active: native
   cloud:
     config:
       server:
+        native:
+          search-locations:
+            - file:../SpringBootMicroservicesCloudConfig
         git:
           uri: https://github.com/LukaszKk/SpringBootMicroservicesCloudConfig
-          username:
-          password:
           default-label: master
           clone-on-start: false
+    bus:
+      enabled: true
+      refresh:
+        enabled: true
   rabbitmq:
     host: localhost
     port: 5672
@@ -25,3 +32,4 @@ management:
       exposure:
         include:
           - busrefresh
+          - refresh
