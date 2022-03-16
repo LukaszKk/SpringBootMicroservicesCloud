@@ -33,3 +33,11 @@ management:
         include:
           - busrefresh
           - refresh
+
+encrypt:
+  key: oakjshdkajhsd8712643jaldTYGFEkaje
+#  key-store:
+#    location: file:./apiEncryptionKey.p12
+#    password: password
+#    type: pkcs12
+#    alias: apiEncryptionKey
