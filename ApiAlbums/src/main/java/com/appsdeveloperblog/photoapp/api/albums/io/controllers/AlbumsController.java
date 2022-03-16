@@ -34,11 +34,10 @@ public class AlbumsController {
     AlbumsService albumsService;
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @GetMapping(
-        produces = {
-            MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE,
-        })
+    @GetMapping(produces = {
+        MediaType.APPLICATION_JSON_VALUE,
+        MediaType.APPLICATION_XML_VALUE,
+    })
     public List<AlbumResponseModel> userAlbums(@PathVariable String id) {
 
         List<AlbumResponseModel> returnValue = new ArrayList<>();

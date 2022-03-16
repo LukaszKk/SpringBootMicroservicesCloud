@@ -1,29 +1,46 @@
 package org.spring.service;
 
+import org.modelmapper.ModelMapper;
 import org.spring.db.dao.UserRepository;
 import org.spring.db.dto.UserEntity;
 import org.spring.ui.request.UserRequest;
+import org.spring.ui.response.AlbumResponseModel;
 import org.spring.ui.response.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class UsersServiceImpl implements UsersService {
 
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private RestTemplate restTemplate;
+    private Environment env;
 
     @Autowired
-    public UsersServiceImpl(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UsersServiceImpl(UserRepository userRepository,
+                            BCryptPasswordEncoder bCryptPasswordEncoder,
+                            RestTemplate restTemplate,
+                            Environment environment) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.restTemplate = restTemplate;
+        this.env = environment;
     }
 
     @Override
@@ -43,6 +60,27 @@ public class UsersServiceImpl implements UsersService {
         }
 
         return toResponse(entity);
+    }
+
+    @Override
+    public UserResponse getUserByUserId(Integer userId) {
+        Optional<UserEntity> entity = userRepository.findById(userId);
+        if (entity.isEmpty()) {
+            throw new RuntimeException(userId + " not found");
+        }
+
+        UserResponse userResponse = new ModelMapper().map(entity.get(), UserResponse.class);
+
+        String albumsUrl = String.format(Objects.requireNonNull(env.getProperty("albums.url")), userId);
+        ResponseEntity<List<AlbumResponseModel>> albumsListResponse =
+            restTemplate.exchange(albumsUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<>() {
+                });
+        List<AlbumResponseModel> albumsList = albumsListResponse.getBody();
+
+        userResponse.setAlbums(albumsList);
+
+        return userResponse;
     }
 
     @Override

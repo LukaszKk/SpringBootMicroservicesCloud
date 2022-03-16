@@ -10,4 +10,5 @@ public interface UsersService extends UserDetailsService {
 
     UserResponse createUser(UserRequest userDetails);
     UserResponse getUserDetailsByEmail(String email);
+    UserResponse getUserByUserId(Integer userId);
 }
