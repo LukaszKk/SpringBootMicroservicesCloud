@@ -48,3 +48,10 @@ token:
 login:
   url:
     path: /login # the same as default
+
+logging:
+  level:
+    org:
+      spring:
+        service:
+          AlbumsServiceClient: DEBUG
