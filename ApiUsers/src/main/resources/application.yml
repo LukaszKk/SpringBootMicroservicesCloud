@@ -62,6 +62,8 @@ logging:
       spring:
         service:
           AlbumsServiceClient: DEBUG
+  file:
+    name: apiusers.log
 
 management:
   endpoints:
