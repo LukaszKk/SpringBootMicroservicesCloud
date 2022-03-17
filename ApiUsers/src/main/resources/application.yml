@@ -71,6 +71,7 @@ management:
 
 resilience4j:
   circuitbreaker:
+    circuit-breaker-aspect-order: 1
     instances:
       albums-ws:
         failureRateThreshold: 50
@@ -80,3 +81,11 @@ resilience4j:
         slidingWindowSize: 2
         minimumNumberOfCalls: 1
         eventConsumerBufferSize: 10
+  retry:
+    retry-aspect-order: 2
+    instances:
+      album-ws:
+        maxAttempts: 3
+        waitDuration: 2s
+        enableExponentialBackoff: true
+        exponentialBackoffMultiplier: 5
