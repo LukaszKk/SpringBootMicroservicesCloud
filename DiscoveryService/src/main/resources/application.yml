@@ -9,5 +9,7 @@ eureka:
       defaultZone: http://localhost:8080/eureka
 
 spring:
+  config:
+    import: optional:configserver:http://localhost:8082
   application:
     name: discoveryservice
