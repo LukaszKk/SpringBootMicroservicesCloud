@@ -1,6 +1,8 @@
 package org.spring.service;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spring.communication.internal.AlbumsServiceClient;
 import org.spring.db.dao.UserRepository;
 import org.spring.db.dto.UserEntity;
@@ -21,6 +23,7 @@ import java.util.Optional;
 @Service
 public class UsersServiceImpl implements UsersService {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 //    private RestTemplate restTemplate;
@@ -72,6 +75,8 @@ public class UsersServiceImpl implements UsersService {
 //                new ParameterizedTypeReference<>() {
 //                });
 //        List<AlbumResponseModel> albumsList = albumsListResponse.getBody();
+
+        logger.info("Before calling albums Microservice");
 
         var albumsList = albumsServiceClient.getAlbums(userId);
 
