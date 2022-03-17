@@ -1,6 +1,7 @@
 package org.spring.service;
 
 import org.modelmapper.ModelMapper;
+import org.spring.communication.internal.AlbumsServiceClient;
 import org.spring.db.dao.UserRepository;
 import org.spring.db.dto.UserEntity;
 import org.spring.ui.request.UserRequest;

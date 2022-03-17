@@ -1,4 +1,4 @@
-package org.spring.controller;
+package org.spring.communication.external;
 
 import org.modelmapper.ModelMapper;
 import org.spring.service.UsersService;

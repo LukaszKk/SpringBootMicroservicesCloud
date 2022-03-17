@@ -58,6 +58,14 @@ public class Main {
 //                    .removeRequestHeader("Cookie")
 //                    .rewritePath("/apiusers/(?<segment>.*)", "/$\\{segment}"))
 //                .uri("lb://apiaccountmanagement"))
+            .route(r -> r
+                .path("/apiusers/actuator/**")
+                .and()
+                .method(HttpMethod.GET)
+                .filters(f -> f
+                    .removeRequestHeader("Cookie")
+                    .rewritePath("/apiusers/(?<segment>.*)", "/$\\{segment}"))
+                .uri("lb://apiusers"))
             .build();
     }
 }

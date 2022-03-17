@@ -1,5 +1,6 @@
-package org.spring.service;
+package org.spring.communication.internal;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.spring.ui.response.AlbumResponseModel;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,5 +12,11 @@ import java.util.List;
 public interface AlbumsServiceClient {
 
     @GetMapping("/users/{id}/albums")
+    @CircuitBreaker(name = "albums-ws", fallbackMethod = "getAlbumsFallback")
     List<AlbumResponseModel> getAlbums(@PathVariable Integer id);
+
+    default List<AlbumResponseModel> getAlbumsFallback(Integer id, Throwable exception) {
+        System.out.println("Exception took place " + exception.getMessage());
+        return List.of();
+    }
 }
