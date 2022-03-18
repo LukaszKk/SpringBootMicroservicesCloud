@@ -1,0 +1,5 @@
+FROM openjdk:17-alpine
+VOLUME /tmp
+COPY src/main/resources/apiEncryptionKey.p12 apiEncryptionKey.p12
+COPY build/libs/ConfigServer-1.0.jar ConfigServer.jar
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom","-jar","ConfigServer.jar"]
