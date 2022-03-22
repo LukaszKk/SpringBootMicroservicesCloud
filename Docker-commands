@@ -1,0 +1,2 @@
+# Docker command to download image from docker hub
+docker run -d -p 8082:8082 -e "spring.rabbitmq.host=172.17.0.2" aku4/config-server
