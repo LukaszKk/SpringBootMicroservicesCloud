@@ -1,0 +1,3 @@
+FROM openjdk:17-alpine
+COPY build/libs/DiscoveryService-1.0.jar DiscoveryService.jar
+ENTRYPOINT ["java","-jar","DiscoveryService.jar"]
