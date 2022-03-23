@@ -6,3 +6,10 @@ docker build --tag=eureka-server --force-rm=true .
 
 # Run api gateway
 docker run -e "spring.config.import=optional:configserver:http://172.31.45.154:8082" -e "spring.rabbitmq.host=172.31.45.154" -p 8081:8081 -d aku4/spring-cloud-api-gateway
+
+# Run elasticsearch
+docker run -d -v esdata1:/usr/share/elasticsearch/data --name elasticsearch -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -e "xpack.security.enabled=false" -e ES_JAVA_OPTS="-Xms256m -Xmx256m" --network api-network elasticsearch:8.1.1
+
+# Run kibana
+docker run -d --network api-network --name kibana -p 5601:5601 kibana:8.1.1
+
